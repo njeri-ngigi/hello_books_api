@@ -1,11 +1,13 @@
 # Hello Books API
-A RESTful Flask api for the hello-books application 
+A RESTful Flask api for the hello-books application. 
 
 <h3>Prerequisites</h3>
 
 <h3>Installation</h3>
 
 <h3>Running the tests</h3>
+Run the unittest.py tests using nosetests
+   nosetests unittests.py
 
 <h3>Built with </h3>
    Flask Framework - Python Framework
