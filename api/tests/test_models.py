@@ -5,8 +5,8 @@ from api import app
 #class to test models
 class TestModels(unittest.TestCase):
     def setUp(self):
-        self.my_book = app.models.Books()
-        self.my_user = app.models.Users()
+        self.my_book = app.Books()
+        self.my_user = app.Users()
         self.my_book.books={1 : {"Hello world":"Leah Beau"}}
         
     def test_put_book(self):

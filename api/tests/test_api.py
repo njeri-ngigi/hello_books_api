@@ -3,14 +3,13 @@
 #test_api.py
 import unittest, json
 
-from api import app 
+from api import app
 
 #class to respresent create an get books testcase
 class TestCreateAndGetAllBooks(unittest.TestCase):
     def setUp(self):
         #create a test client
-        self.app = app.app.create_app()
-        self.client = self.app.test_client  
+        self.client = app.app.test_client  
 
         self.book= {"book_id":1, "title":"Figure skating for dummies", "author":"Jonas Jonas"}
     
@@ -33,8 +32,8 @@ class TestCreateAndGetAllBooks(unittest.TestCase):
 class TestModifyBookById(unittest.TestCase):
     def setUp(self):
         #create a test client
-        self.app = app.app.create_app()
-        self.client = self.app.test_client
+        
+        self.client = app.app.test_client
         self.book= {"book_id":1, "title":"Figure skating for dummies", "author":"Jonas Jonas"}
 
 
