@@ -17,6 +17,13 @@ class TestModels(unittest.TestCase):
         result = self.my_book.get_all()
         self.assertEqual(self.my_book.books, result)
 
+    def test_edit_book(self):
+        self.my_book.put("Harry Potter", "JK Rowling", 2)
+        self.assertIn("Harry Potter", self.my_book.books[2])
+
+        result = self.my_book.edit_book("Harry Potter and the Goblet of Giggles", "JK Rowling", 2)
+        self.assertIn("Harry Potter and the Goblet of Giggles", self.my_book.books[2])
+
     def test_get_single_book(self):
         self.my_book.put("Harry Potter", "JK Rowling", 2)
         self.assertIn("Harry Potter", self.my_book.books[2])
