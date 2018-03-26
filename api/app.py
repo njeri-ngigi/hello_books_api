@@ -5,9 +5,7 @@ from models import Books, Users
 
 app = Flask(__name__, instance_relative_config=True)
 app.config["TESTING"] = True
-
 book = Books()
-
 
 @app.route('/books', methods=['POST', 'GET'])
 def put_and_get_books():
