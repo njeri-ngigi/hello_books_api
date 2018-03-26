@@ -1,5 +1,5 @@
 #app.py
-from flask import Flask, request, jsonify, abort
+from flask import Flask, request, jsonify
 
 def create_app(): 
 
@@ -93,10 +93,18 @@ def create_app():
             response = jsonify({"message": msg})
             response.status_code = 200
             return(response)
+            
+            
+        
+        return app
+
+app = create_app()
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)
 
 
-    return app
 '''
+
     @app.route('/users/books/<book_id>')
     def borrow_book():
 
@@ -109,4 +117,6 @@ def create_app():
 
     @app.route('/auth/reset-password')'''
 
-     
+
+
+
