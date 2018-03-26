@@ -1,9 +1,10 @@
 #app.py
 from flask import Flask, request, jsonify, abort
-from models import Books, Users
-import json
 
-def create_app():   
+def create_app(): 
+
+    from models import Books, Users  
+
     app = Flask(__name__, instance_relative_config=True)
     app.config["TESTING"] = True
 
@@ -15,10 +16,11 @@ def create_app():
         if request.method == 'POST':
             title = str(request.form.get('title'))
             author = str(request.form.get('author'))
+            book_id = str(request.form.get('book_id'))
 
             #book = Books()
-            book.put(title, author)
-            response = jsonify({"title" : title, "author" : author})                
+            book.put(title, author, book_id)
+            response = jsonify({"book_id" : book_id, "title" : title, "author" : author})                
             response.status_code = 200
 
             return response
@@ -28,28 +30,73 @@ def create_app():
             all_books = book.get_all()
 
             results = []
+            
             for i in all_books:
-                obj = {
-                    'title' : i,
-                   'author' : all_books[i]
-                    }
-                #append obj to results
-                results.append(obj)
+                
+                for j in all_books[i]:
+                    obj = {"title" : j,
+                    "author" : all_books[i][j]
+                    }                                   
+                    #append obj to results
+                    results.append(obj)
+
             response = jsonify(results)
             response.status_code = 200
 
             return response
 
-    return app
-'''
+    
     @app.route('/books/<book_id>', methods=['PUT', 'GET', 'DELETE'])
-    def modify_books():
-        if request.method == 'PUT':
+    def book_modification(book_id):                
+        
+        if request.method == 'GET':
+        #get a book by its id        
 
-        else if request.method =='GET':
+            
+            
+            try:
+                my_book = book.get_single_book(book_id)
+                results = []
+
+                for i in my_book:
+                    obj={
+                        'title' : i,
+                        'author' : my_book[i]
+                    }
+                    results.append(obj)
+                response = jsonify(results)
+                response.status_code = 200
+                return response
+
+            except KeyError:
+                response = jsonify({'message': 'item not found'})
+                response.status_code = 404
+                return response
+         
+
+
+        elif request.method =='PUT':
+         #modify or edit a book
+            title = str(request.form.get('title',''))
+            author = str(request.form.get('author', ''))
+           
+            book.edit_book(title,author, book_id)
+            response = jsonify({"book_id": book_id, "title" : title, "author" : author})                
+            response.status_code = 200
+
+            return response
 
         else:
+        #delete a book, method=DELETE            
+            book.delete(book_id)
+            msg = ("book {} deleted successfully".format(book_id))
+            response = jsonify({"message": msg})
+            response.status_code = 200
+            return(response)
 
+
+    return app
+'''
     @app.route('/users/books/<book_id>')
     def borrow_book():
 
@@ -60,6 +107,6 @@ def create_app():
 
     @app.route('/auth/logout')
 
-    @app.route('/auth/reset-password')  '''
+    @app.route('/auth/reset-password')'''
 
-
+     
