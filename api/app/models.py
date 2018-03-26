@@ -3,6 +3,7 @@ class Books():
     def __init__(self):
         
         self.books = {}
+        
 		
 
     #retrieve all books
@@ -10,20 +11,21 @@ class Books():
         return self.books
 
 
-    def get_single_book(self, title):
-    	return ({title : self.books[title]})
+    def get_single_book(self, id):
+    	return (self.books[id])
 
     #add a book or modify a book
-    def put(self, title, author):
+    def put(self, title, author, id):
         
-        self.books[title] = author
+        book = {title:author}
+        self.books[id] = book
 		
-        return ({title:author})
+        return (self.books[id])
     
     #delete a book  
-    def delete(self, title):
+    def delete(self, id):
    
-        del self.books[title]
+        del self.books[id]
         
         return (self.books)
 
