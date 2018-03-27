@@ -1,12 +1,12 @@
 #test_models.py
 import unittest
-from api import app
+from api import my_app
 
 #class to test models
 class TestModels(unittest.TestCase):
     def setUp(self):
-        self.my_book = app.Books()
-        self.my_user = app.Users()
+        self.my_book = my_app.Books()
+        self.my_user = my_app.Users()
         
         
     def test_put_book(self):
@@ -35,9 +35,19 @@ class TestModels(unittest.TestCase):
         self.assertNotIn(3, result)
 
     def test_put_user(self):
-    	result = self.my_user.put("njeri-ngigi", "abc@a.com", "imeowit")
-    	self.assertIn("njeri-ngigi", self.my_user.users)
-    	self.assertEqual(result["njeri-ngigi"], self.my_user.users["njeri-ngigi"])
+    	result = self.my_user.put("Adelle Owino","a-owino", "ac@ab.com", "0767","imeowit")
+    	result2 = self.my_user.show_all_users()
+        self.assertIn("a-owino", result2)
+
+    def test_verify_password(self):
+        result = self.my_user.verify_password("a-owino", "imeowit")
+        
+        self.assertEqual(result,{"message": "Successfully logged in"})
+
+    def test_borrow_book(self):
+        result = self.my_user.borrow_book(1)
+        self.assertEqual(result, {"message":"Book successfully checked out"})
+    	
 
 #make the tests conviniently executable
 if __name__ == "__main__":

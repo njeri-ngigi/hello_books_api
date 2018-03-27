@@ -41,17 +41,12 @@ class TestModifyBookById(unittest.TestCase):
 
     #test that api can retrieve book by id
     def test_api_can_get_book_by_id(self):
-        rv = self.client().post('/books', data=self.testbook)
-        self.assertEqual(rv.status_code, 200)
-        
-
        
-        result = self.client().get('/books/5')
+        result = self.client().get('/books/2')
         
-        print (result)
         self.assertEqual(result.status_code, 200)
         
-        self.assertIn("Figure skating for dummies", str(result.data))
+        self.assertIn("Fly away birdie", str(result.data))
 
     #test that api can modify book
     def test_book_can_be_edited(self):
@@ -74,7 +69,17 @@ class TestModifyBookById(unittest.TestCase):
         result = self.client().get('/books/3')
         self.assertEqual(result.status_code, 404)
 
-    
+#class to represent user tests
+class Test_user_borrow_book(unittest.TestCase):
+    def setUp(self):
+        self.client = app.app.test_client
+        self.user = {"njeri-ngigi", "1234"}
+
+    def test_borrow_book(self):
+        rv=self.client().post('/users/books/3')
+        self.assertEqual(rv.status_code, 200)
+
+
 
 
    
