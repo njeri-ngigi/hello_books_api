@@ -2,7 +2,7 @@
 
 #test_api.py
 import unittest
-from flask import jsonify, json
+from flask import jsonify
 
 from api import app
 
