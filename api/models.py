@@ -1,3 +1,4 @@
+from flask import jsonify
 
 all_books = {}
 def get_all_books_for_test_model():
@@ -14,7 +15,7 @@ class Books():
 
 
     def get_single_book(self, book_id):
-    	return (all_books[book_id])
+        return (all_books[book_id])
 
     #add a book 
     def put(self, title, author, edition, copies, book_id):
@@ -25,7 +26,7 @@ class Books():
         self.book["copies"] = copies
 
         all_books[book_id] = self.book
-		
+        
         return (all_books[book_id])
 
     #edit a book
@@ -63,15 +64,54 @@ b4.put("Dunia haina huruma", "Kung'u Kahiga", "1st", 12 ,4)
 
 
 
-#create an object User with itle and author 
+#create an object User with name, username, email, phone and password
 #attributes set which are then added to a dictionary called all_books
+users = {}
 class Users():
     def __init__(self):
-        self.username = ""
-        self.email = ""
-        self.password = ""
-        self.users = {}
         
-    def put(self, username, email, password):
-        self.users[username] = [email, password]
-        return ({username : self.users[username]})
+        self.user = {}
+        
+    def show_all_users(self):
+        return users
+
+    def put(self, name, username, email, phone, password):
+        
+        self.user["name"] = name
+        self.user["email"] = email
+        self.user["phone"] = phone
+        self.user["password"] = password
+
+
+
+        users[username] = self.user
+        return ({username : users[username]})
+
+    def verify_password(self, username, password):
+        answer = (username in users)
+
+        if answer==True:
+            if ((users[username]["password"]) == password):
+                return ({"message":"Successfully logged in"})
+                
+            else:
+                return ({"message":"Password is incorrect"})
+                
+
+        else:
+
+            return ({"message":"username not found"})
+        
+
+    def borrow_book(self, book_id):
+        answer = book_id in all_books
+        if (answer == True):
+            all_books[book_id]["copies"] -= 1
+            if (all_books[book_id]["copies"] == 0):
+                del all_books[book_id]
+            return ({"message":"Book successfully checked out"})
+        else:
+            return ({"message":"Book not found"})
+
+u = Users()
+u.put("Njeri Ngigi", "njeri-ngigi", "abc@d.com", "07XX", "1234")
