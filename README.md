@@ -23,11 +23,10 @@ A RESTful Flask api for the hello-books application.
    
 ## Badges  
 ### Continuous Integration
-**Travis CI** 
-[![Build Status](https://travis-ci.org/njeri-ngigi/hello-books-api.svg?branch=master)](https://travis-ci.org/njeri-ngigi/hello-books-api)
+###### Travis CI [![Build Status](https://travis-ci.org/njeri-ngigi/hello-books-api.svg?branch=master)](https://travis-ci.org/njeri-ngigi/hello-books-api)
 ### Test Coverage
-### Code Climate
-
+###### Coveralls [![Coverage Status](https://coveralls.io/repos/github/njeri-ngigi/hello-books-api/badge.svg?branch=master)](https://coveralls.io/github/njeri-ngigi/hello-books-api?branch=master)
+###### Code Climate [![Maintainability](https://api.codeclimate.com/v1/badges/7c9b7ea6c931b923ab83/maintainability)](https://codeclimate.com/github/njeri-ngigi/hello-books-api/maintainability)
 ### Deployment
 ## Built with 
    Flask Framework - Python Framework
