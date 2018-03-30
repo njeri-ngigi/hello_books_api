@@ -3,6 +3,7 @@ python:
  - "3.6.5"	
 cache: pip	
 install:	
- - pip install -r requirements.txt	
+ - pip install -r requirements.txt
+ - pip install coverage
 script:	
-   nosetests test_models.py
+ - nosetests api/tests/test_models.py
