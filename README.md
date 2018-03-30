@@ -25,7 +25,8 @@ A RESTful Flask api for the hello-books application.
 ### Continuous Integration
 **Travis CI** 
 [![Build Status](https://travis-ci.org/njeri-ngigi/hello-books-api.svg?branch=master)](https://travis-ci.org/njeri-ngigi/hello-books-api)
-### **Test Coverage**
+### Test Coverage
+### Code Climate
 
 ### Deployment
 ## Built with 
