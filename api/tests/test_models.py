@@ -1,56 +1,57 @@
-#test_models.py
+'''test_models.py'''
 import unittest
-from api import my_app
+from api import models
 
 #class to test models
 class TestModels(unittest.TestCase):
+    '''class to test models created'''
     def setUp(self):
-        self.my_book = my_app.Books()
-        self.my_user = my_app.Users()
-        
-        
+        self.my_book = models.Books()
+        self.my_user = models.Users()
+
     def test_put_book(self):
-        result = self.my_book.put("Harry Potter", "JK Rowling", "1st", 4, 2)
+        '''test that put_book adds book to dictionary ALL_BOOKS'''
+        result = self.my_book.put("Harry Potter", "JK Rowling", "1st", 4, 22)
         self.assertIn("Harry Potter", result['title'])
-    
-    def test_get_book(self):
-        result = self.my_book.put("Hello world", "Leah Beau", "3rd", 3, 1)
-        result = self.my_book.get_all()        
-        self.assertTrue(result)
 
     def test_edit_book(self):
-        result = self.my_book.edit_book("Harry Potter and the Goblet of Giggles", "JK Rowling", "2nd", 2, 2)
+        '''test that edit_book edits'''
+        self.my_book.put("Make me laugh", "Louis Lenard", "1st", 4, 20)
+        result = self.my_book.edit_book("Harry Potter and the Goblet of Giggles",
+                                        "Louis Lenard", "2nd", 2, 20)
         self.assertIn("Harry Potter and the Goblet of Giggles", result["title"])
 
     def test_get_single_book(self):
-        result = self.my_book.get_single_book(2)
-        self.assertEqual("JK Rowling", result['author'])
-        
+        '''test that get_single_book returns a book from dictionary ALL_BOOKS'''
+        self.my_book.put("How long to live", "Mary Howard", "1st", 4, 19)
+        result = self.my_book.get_single_book(19)
+        self.assertEqual("Mary Howard", result['author'])
+
     def test_delete_book(self):
-        result = self.my_book.put("Play hard", "Eustace", "1st", 4, 3)
-        self.assertIn("Play hard", result['title'])
+        '''test that delete_book deletes book from ALL_BOOKS'''
+        self.my_book.put("Leople", "Master Xi", "1st", 4, 15)
+        result = self.my_book.delete(15)
+        self.assertEqual(
+            {"message": "Book 15 deleted successfully"}, result)
 
         result = self.my_book.delete(3)
-          
         self.assertNotIn(3, result)
 
     def test_put_user(self):
-    	result = self.my_user.put("Adelle Owino","a-owino", "ac@ab.com", "0767","imeowit")
-    	result2 = self.my_user.show_all_users()
-        self.assertIn("a-owino", result2)
+        '''test that put_user adds user to dictionary USERS'''
+        result = self.my_user.put("Adelle Owino", "a-owino", "ac@ab.com", "0767", "imeowit")
+        self.assertIn("a-owino", result)
 
     def test_verify_password(self):
+        '''test verify password'''
         result = self.my_user.verify_password("a-owino", "imeowit")
+        self.assertEqual(result, True)
+        del models.USERS['a-owino']
         
-        self.assertEqual(result,{"message": "Successfully logged in"})
-
     def test_borrow_book(self):
+        '''test borrow a book'''
         result = self.my_user.borrow_book(1)
         self.assertEqual(result, {"message":"Book successfully checked out"})
-    	
-
 #make the tests conviniently executable
 if __name__ == "__main__":
-	unittest.main()
-
-
+    unittest.main()
