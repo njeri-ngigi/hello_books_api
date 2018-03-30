@@ -1,24 +1,38 @@
 # Hello Books API
 A RESTful Flask api for the hello-books application.
-   (To be updated soon)
 
-<h3>Prerequisites</h3>
-   To be updated soon
+## Prerequisites
+      pip
+      Flask
+      nose
+      virtualenv
+      
 
-<h3>Installation</h3>
-   To be updated soon
+## Installation
+   	To be updated soon
 
-<h3>Running the tests</h3>
-   (To be updated soon)
-
-Run the unittest.py tests using nosetests
-   nosetests unittests.py
+## Running the tests
+  The tests for this API are written using the python module unittests. The tests can be found within the folder api under the folder tests.
+  Python unit test framework nose that extends from unittest is used to run the tests.<br>
+  To run the tests use the command:
+      
+   ```
+   nosetests test_models.py
+   nosetests test_api.py
+  ```
    
-   (To be updated soon)
+## Badges  
+### Continuous Integration
+**Travis CI** 
+[![Build Status](https://travis-ci.org/njeri-ngigi/hello-books-api.svg?branch=master)](https://travis-ci.org/njeri-ngigi/hello-books-api)
+### Test Coverage
+### Code Climate
 
-<h3>Built with </h3>
+### Deployment
+## Built with 
    Flask Framework - Python Framework
    (To be updated soon)
    
-<h3>Authors</h3>
-Njeri Ngigi <a href="https://github.com/njeri-ngig">@njeri-ngigi</a>
+## Authors
+[Njeri Ngigi](https://github.com/njeri-ngigi)
+
