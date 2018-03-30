@@ -23,7 +23,7 @@ A RESTful Flask api for the hello-books application.
    
 ## Badges  
 ### Continuous Integration
-#### **Travis CI** 
+**Travis CI** 
 [![Build Status](https://travis-ci.org/njeri-ngigi/hello-books-api.svg?branch=master)](https://travis-ci.org/njeri-ngigi/hello-books-api)
 ### **Test Coverage**
 
