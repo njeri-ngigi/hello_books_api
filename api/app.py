@@ -1,12 +1,11 @@
 '''app.py'''
 import re
 from flask import Flask, request, jsonify
-from flask_jwt_extended import (
-    JWTManager, jwt_required, create_access_token, get_raw_jwt)
+from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_raw_jwt)
 from models import Books, Users
 
 APP = Flask(__name__)
-#APP.config["TESTING"] = True
+APP.config["TESTING"] = True
 
 MY_BOOK = Books()
 
@@ -56,12 +55,13 @@ def book_book_id(book_id):
 
         return response
 
-    else:
+    
     #delete a book, method=DELETE
-        response = jsonify(MY_BOOK.delete(book_id))
-        response.status_code = 200
+    response = jsonify(MY_BOOK.delete(book_id))
+    response.status_code = 200
 
-        return response
+    return response
+
 
 #check if jwt token is in blacklist
 APP.config['JWT_SECRET_KEY'] = 'my-key'
@@ -71,6 +71,7 @@ jwt = JWTManager(APP)
 
 BLACKLIST = set()
 
+
 @jwt.token_in_blacklist_loader
 def check_if_token_blacklist(decrypted_token):
     '''check if jti(unique identifier) is in black list'''
@@ -78,15 +79,6 @@ def check_if_token_blacklist(decrypted_token):
     return jti in BLACKLIST
 
 MY_USER = Users()
-
-@APP.route('/api/v1/users/books/<int:book_id>', methods=['POST'])
-@jwt_required
-def users_books(book_id):
-    '''user can borrow a book if logged in'''
-    response = jsonify(MY_USER.borrow_book(book_id))
-    response.status_code = 200
-    return response
-
 
 @APP.route('/api/v1/auth/register', methods=['POST'])
 def register():
@@ -96,15 +88,29 @@ def register():
     name = data.get('name')
     email = data.get('email')
     password = data.get('password')
+    confirm_password = data.get('confirm_password')
 
     if len(password) < 4:
-        return jsonify({"message":"password is too short"})
-    match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email)
+        return jsonify({"message": "password is too short"})
+    if confirm_password != password:
+        return jsonify({"message": "Passwords don't match"})
+    match = re.match(
+        '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email)
     if match is None:
-        return jsonify({"message":"Enter a valid email address"})
+        return jsonify({"message": "Enter a valid email address"})
     response = jsonify(MY_USER.put(name, username, email, password))
     response.status_code = 200
     return response
+
+
+@APP.route('/api/v1/users/books/<int:book_id>', methods=['POST'])
+@jwt_required
+def users_books(book_id):
+    '''user can borrow a book if logged in'''
+    response = jsonify(MY_USER.borrow_book(book_id))
+    response.status_code = 200
+    return response
+
 
 @APP.route('/api/v1/auth/login', methods=['POST'])
 def login():
@@ -116,11 +122,12 @@ def login():
 
     if auth == "True":
         access_token = create_access_token(identity=username)
-        return jsonify({"token": access_token})
+        return access_token
 
     response = jsonify(auth)
     response.status_code = 401
     return response
+
 
 @APP.route('/api/v1/auth/logout', methods=['POST'])
 @jwt_required
@@ -128,13 +135,19 @@ def logout():
     '''logout user by revoking password'''
     jti = get_raw_jwt()['jti']
     BLACKLIST.add(jti)
-    return jsonify({"message" : "Successfully logged out"})
+    return jsonify({"message": "Successfully logged out"})
 
-@APP.route('/auth/reset-password', methods=['POST'])
-@jwt_required
+
+@APP.route('/api/v1/auth/reset-password', methods=['POST'])
 def reset_password():
     '''reset user password'''
-    pass
+    data = request.get_json()
+    username = data.get("username")
+
+    response = jsonify(MY_USER.reset_password(username))
+    response.status_code = 200
+    return response
+
 
 #method to run app.py
 if __name__ == '__main__':
