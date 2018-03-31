@@ -3,7 +3,7 @@ import re
 from flask import Flask, request, jsonify
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_jwt_identity)
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import Books, Users
+from api.models import Books, Users
 
 APP = Flask(__name__)
 #APP.config["TESTING"] = True
