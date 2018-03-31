@@ -1,7 +1,7 @@
 '''test_models.py'''
 import unittest
+from werkzeug.security import check_password_hash
 from api import models
-from werkzeug.security import check_password_hash, generate_password_hash
 
 #class to test models
 class TestModels(unittest.TestCase):
@@ -58,7 +58,7 @@ class TestModels(unittest.TestCase):
         '''test reset password'''
         self.my_user.put("Martha", "martha", "ac@ab.com", "kesho")
         result = self.my_user.reset_password("martha")
-        self.assertEqual(False, check_password_hash("kesho", result["new password"]))               
+        self.assertEqual(False, check_password_hash("kesho", result["new password"]))
         self.assertEqual(7, len(result["new password"]))
 
 
