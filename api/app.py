@@ -1,7 +1,9 @@
 '''app.py'''
+import re
 from flask import Flask, request, jsonify
-from validate_email import validate_email
-from api.models import Books, Users
+from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_jwt_identity)
+from werkzeug.security import generate_password_hash, check_password_hash
+from models import Books, Users
 
 APP = Flask(__name__)
 #APP.config["TESTING"] = True
@@ -63,6 +65,8 @@ def book_book_id(book_id):
         return response
 
 MY_USER = Users()
+APP.config['JWT_SECRET_KEY'] = 'super-secret'
+jwt = JWTManager(APP)
 
 @APP.route('/api/v1/users/books/<int:book_id>', methods=['POST'])
 def users_books(book_id):
@@ -79,32 +83,38 @@ def users_books(book_id):
     if auth == "False":
         return {"Message": "Authorization failed"}
 
-@APP.route('/auth/register', methods=['POST'])
+@APP.route('/api/v1/auth/register', methods=['POST'])
 def register():
     '''endpoint to register a user'''
-    username = str(request.form.get('username'))
-    name = str(request.form.get('name'))
-    email = str(request.form.get('email'))
-    phone = str(request.form.get('phone'))
-    password = str(request.form.get('password'))
+    data = request.get_json()
+    username = data.get('username')
+    name = data.get('name')
+    email = data.get('email')
+    password = data.get('password')
 
+   
     if len(password) < 4:
         return jsonify({"message":"password is too short"})
-    if validate_email(email) is True:
-        return jsonify({"message":"Invalid email address"})
-    else:
-        response = MY_USER.put(name, username, email, phone, password)
-        response.status_code = 200
-        return response
+    match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$',email)
+    if match == None:
+        return jsonify({"message":"Enter a valid email address"})
+    pw_hash = generate_password_hash(password)
+    response = jsonify(MY_USER.put(name, username, email, pw_hash))
+    response.status_code = 200
+    return response
 '''
-@APP.route('auth/login', methods=['POST'])
+@APP.route('/auth/login', methods=['POST'])
 def login():
+    pass
 
-@APP.route('auth/logout', methods=['POST'])
+@APP.route('/auth/logout', methods=['POST'])
 def logout():
+    pass
 
-@APP.route('auth/reset-password', methods=['POST'])
-def reset_password():'''
+@APP.route('/auth/reset-password', methods=['POST'])
+def reset_password():
+    pass
+'''
 
 #method to run app.py
 if __name__ == '__main__':
