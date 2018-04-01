@@ -53,15 +53,6 @@ class Books():
 
         return {"message":"Book you are trying to delete doesn't exist"}
 
-B = Books()
-B2 = Books()
-B3 = Books()
-B4 = Books()
-B.put("Tiny Stone", "Martha Mackenzie", "1st", 1)
-B2.put("Fly away birdie", "Marietta Gonzalez", "1st", 2)
-B3.put("Go home, Susan", "Barry White", "1st", 3)
-B4.put("Dunia haina huruma", "Kung'u Kahiga", "1st", 4)
-
 
 USERS = {}
 
@@ -109,7 +100,3 @@ class Users():
             return {"new password":new_password}
 
         return {"message":"Incorrect username"}
-
-U = Users()
-U.put("Njeri Ngigi", "njeri-ngigi", "abc@d.com", "1234")
-U.put("Shaggy", "scooby", "scooby@you.com", "1234")
