@@ -47,6 +47,7 @@ class TestApiEndpoints(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         res = self.client().delete('/api/v1/books/16')
         self.assertEqual(res.status_code, 200)
+
         #test to check whether deleted item exists
         result = self.client().get('/api/v1/books/16')
         self.assertIn("Book not found", result.data)

@@ -12,7 +12,6 @@ Flask-JWT==0.3.2
 Flask-JWT-Extended==3.7.2
 Flask-SQLAlchemy==2.3.2
 Flask-Validator==1.2.3
-futures==3.2.0
 idna==2.6
 isbnlib==3.6.8
 iso3166==0.8
