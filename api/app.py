@@ -5,14 +5,15 @@ from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, g
 from models import Books, Users
 
 
-
 app = Flask(__name__)
 app.config["TESTING"] = True
 
 MY_BOOK = Books()
 
 #sent_data = request.get_json(force=True)
-
+@app.route('/')
+def hello():
+    return jsonify({"msg":"Hello world"})
 @app.route('/api/v1/books', methods=['GET', 'POST'])
 def books():
     '''endpoint to add book and get all books'''
