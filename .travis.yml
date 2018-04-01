@@ -8,4 +8,4 @@ install:
 script:	
  - nosetests api/tests
 after_success:
- - npm run coveralls
+ - coveralls
