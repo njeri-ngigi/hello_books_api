@@ -45,7 +45,8 @@ Hello books API is a RESTful Flask application for a simple application that hel
 
 ###### Code Climate [![Maintainability](https://api.codeclimate.com/v1/badges/7c9b7ea6c931b923ab83/maintainability)](https://codeclimate.com/github/njeri-ngigi/hello-books-api/maintainability)
 ### Deployment
-Application deployed to HEROKU
+###### Application deployed to HEROKU [Hello-books-api](https://my-hello-books-api.herokuapp.com/)
+
 ## Built with 
    Flask, a python framework
    
