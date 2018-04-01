@@ -5,7 +5,9 @@ cache: pip
 install:	
  - pip install -r requirements.txt
  - pip install coveralls
+ - pip install codeclimate-test-reporter
 script:	
  - nosetests api/tests
 after_success:
  - coveralls
+ - codeclimate-test-reporter
