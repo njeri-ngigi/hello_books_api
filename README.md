@@ -8,6 +8,10 @@ Hello books API is a RESTful Flask application for a simple application that hel
       
 
 ## Installation
+   clone the repo using
+   ```
+   clone https://github.com/njeri-ngigi/hello-books-api.git
+   ```
    create a virtual environment using 
    ```
    virtualenv <environment name>
