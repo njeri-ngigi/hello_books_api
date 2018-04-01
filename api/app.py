@@ -2,7 +2,7 @@
 import re
 from flask import Flask, request, jsonify
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_raw_jwt)
-from api.models import Books, Users
+from models import Books, Users
 
 
 
