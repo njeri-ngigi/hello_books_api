@@ -1,7 +1,7 @@
 '''test_models.py'''
 import unittest
 from werkzeug.security import check_password_hash
-from hello-books-api import models
+from hello_books_api import models
 
 #class to test models
 class TestModels(unittest.TestCase):
