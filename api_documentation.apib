@@ -1,0 +1,169 @@
+FORMAT: 1A
+HOST: http://polls.apiblueprint.org/
+
+# Hello Books API Documentation
+
+Hello books API is a RESTful Flask application for a simple application 
+that helps manage a library and its processes like stocking, 
+tracking and renting books. Books can be added, deleted, retrieved and 
+edited through endpoints. A user can login in, logout, reset password 
+and borrow a book through the endpoints.
+
+##### BOOKS COLLECTION ['/api/v1/books']
+###### Retrieve all books [Method = 'GET']
+This method retrieves all books in the system
+```
+    Response 200 (application/json)
+    
+        {
+        '1' : {'title': 'Go Home, Susan', 'author': 'Jonas Jonas', 'edition': '3rd'},
+        '2' : {'title': 'Tiny Bugs', 'author': 'Mary', 'edition': '1st'}
+        }
+```
+
+###### Add a book [Method = 'POST']
+This method adds a book
+```
+    Request (application/json)
+    
+        Body
+            {"title":"I'm out", "author":"Patrick Swazey",
+             "edition":"4th", "book_id":4}
+
+    Response 200 (application/json)
+        
+        Body
+            {"author": "Patrick Swazey", "edition": "4th",
+             "title": "I'm out"}
+
+```
+
+##### BOOK BY ID ACTIONS ['/api/v1/books/{}']
+###### Retrieve a single book by ID [Method = 'GET']
+This method gets a single book by ID
+```
+    Request (application/json)
+    
+        Location: '/api/v1/books/4'
+        
+    Response 200 (application/json)
+    
+        Body 
+            {"title":"I'm out", "author":"Patrick Swazey",
+             "edition":"4th", "book_id":4}
+```
+
+###### Edit a book by ID [Method = 'PUT']
+This method edits a book through ID
+```
+    Request (application/json)
+        
+        Location: '/api/v1/books/4'
+        
+        Body
+            {"title":"I'm out", "author":"Patrick Feather Bottom",
+             "edition":"4th"}
+             
+    Response 200 (application/json)
+    
+        Body 
+            {"title":"I'm out", "author":"Patrick Swazey",
+             "edition":"4th"}
+    
+```
+
+###### Delete a book by ID [Method = 'DELETE']
+This method deletes book by ID
+```
+    Request (application/json)
+        
+        Location: '/api/v1/books/4'
+        
+    Response 200 (application/json)
+    
+        {"message":"Book 4 deleted successfully"}
+    
+```
+
+##### USER ACTIONS
+###### Register a user ['/api/v1/auth/register']
+This method registers a user
+```
+    Request (application/json)
+        Body
+            {"name":"Mulandi Mike", "username":"mikey", "email":"qw@we.com",
+             "password":"wxyz", "confirm password":"wxyz"}
+             
+    Response 200 (application/json)
+        Body
+            {"mikey": {"email": "qw@we.com", "name": "Mulandi Mike",
+                       "password": "pbkdf2:sha256:50000$SBHb0E3v$79b2
+                                    96702deef160c9c08b51dca219cd8e55a
+                                    d9610e57f60ed49d1c6045ad37e"}
+                        }
+```
+##### Login a user ['/api/v1/auth/login']
+This method logs in a user by returning a token
+```
+    Request (application/json)
+        Body
+            {"username":"mikey", "password":"where"}
+        
+    Response
+        eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlYTQ0ZjA5YS01M
+        Tg2LTRjZWMtODdjMi04MjE3MWJkODg1NTciLCJleHAiOjE1MjI2MTQ0MTYsImZ
+        yZXNoIjpmYWxzZSwiaWF0IjoxNTIyNjEzNTE2LCJ0eXBlIjoiYWNjZXNzIiwib
+        mJmIjoxNTIyNjEzNTE2LCJpZGVudGl0eSI6Im1pa2V5In0.GEiVrXXx9-j6Kcr
+        MBGfDgETZIBtdWGjCyExkKkTgXi4
+```
+
+##### Borrow a book ['/api/v1/users/books/{}']
+This method uses the token obtained during login to checkout a book
+```
+    Request
+        Header
+            {Authorization : Bearer 
+                            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdG
+                            kiOiJlYTQ0ZjA5YS01MTg2LTRjZWMtODdjMi04MjE3M
+                            WJkODg1NTciLCJleHAiOjE1MjI2MTQ0MTYsImZyZXNoI
+                            jpmYWxzZSwiaWF0IjoxNTIyNjEzNTE2LCJ0eXBlIjoiY
+                            WNjZXNzIiwibmJmIjoxNTIyNjEzNTE2LCJpZGVudGl0e
+                            SI6Im1pa2V5In0.GEiVrXXx9-j6KcrMBGfDgETZIBtdW
+                            GjCyExkKkTgXi4}
+                            
+        Location: '/api/v1/users/books/4'
+        
+    Response 200 (application/json)
+        Body 
+            {"message":"Book successfully checked out"}
+```
+##### Logout a user ['/api/v1/auth/logout']
+This method logs out a user by blacklisting a token
+```
+    Request
+        Header
+            {Authorization : Bearer 
+                            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdG
+                            kiOiJlYTQ0ZjA5YS01MTg2LTRjZWMtODdjMi04MjE3M
+                            WJkODg1NTciLCJleHAiOjE1MjI2MTQ0MTYsImZyZXNoI
+                            jpmYWxzZSwiaWF0IjoxNTIyNjEzNTE2LCJ0eXBlIjoiY
+                            WNjZXNzIiwibmJmIjoxNTIyNjEzNTE2LCJpZGVudGl0e
+                            SI6Im1pa2V5In0.GEiVrXXx9-j6KcrMBGfDgETZIBtdW
+                            GjCyExkKkTgXi4}
+                            
+    Response 200 (application/json)
+        body
+            {"message":"Successfully logged out"}
+```
+
+##### Reset user password ['/api/v1/auth/reset-password']
+This method resets a password to a random string of 7 digits
+```
+    Request (application/json)
+        Body {"username":"mikey", "password":"where"}
+        
+    Response 200 (application/json)
+        Body {"new password": "350JRBI"}
+```     
+
+            

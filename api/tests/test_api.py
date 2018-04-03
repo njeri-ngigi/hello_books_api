@@ -7,8 +7,8 @@ class TestApiEndpoints(unittest.TestCase):
     '''class to tests app.py'''
     def setUp(self):
         '''create a test client'''
-        with app.APP.app_context():
-            self.client = app.APP.test_client
+        with app.app.app_context():
+            self.client = app.app.test_client
     def test_api_can_add_book(self):
         '''test that API can add a book (POST request)'''
         response = self.client().post('/api/v1/books', data=json.dumps(

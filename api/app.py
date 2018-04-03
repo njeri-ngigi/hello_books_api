@@ -2,18 +2,19 @@
 import re
 from flask import Flask, request, jsonify
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_raw_jwt)
-from api.models import Books, Users
+from models import Books, Users
 
 
-
-APP = Flask(__name__)
-APP.config["TESTING"] = True
+app = Flask(__name__)
+app.config["TESTING"] = True
 
 MY_BOOK = Books()
 
 #sent_data = request.get_json(force=True)
-
-@APP.route('/api/v1/books', methods=['GET', 'POST'])
+@app.route('/')
+def hello():
+    return jsonify({"msg":"Hello world"})
+@app.route('/api/v1/books', methods=['GET', 'POST'])
 def books():
     '''endpoint to add book and get all books'''
     if request.method == 'POST':
@@ -35,7 +36,7 @@ def books():
 
     return response
 
-@APP.route('/api/v1/books/<int:book_id>', methods=['PUT', 'GET', 'DELETE'])
+@app.route('/api/v1/books/<int:book_id>', methods=['PUT', 'GET', 'DELETE'])
 def book_book_id(book_id):
     '''endpoint to edit, modify and delete a book by id'''
     if request.method == 'GET':
@@ -66,10 +67,10 @@ def book_book_id(book_id):
 
 
 #check if jwt token is in blacklist
-APP.config['JWT_SECRET_KEY'] = 'my-key'
-APP.config['JWT_BLACKLIST_ENABLED'] = True
-APP.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']
-jwt = JWTManager(APP)
+app.config['JWT_SECRET_KEY'] = 'my-key'
+app.config['JWT_BLACKLIST_ENABLED'] = True
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']
+jwt = JWTManager(app)
 
 BLACKLIST = set()
 
@@ -82,7 +83,7 @@ def check_if_token_blacklist(decrypted_token):
 
 MY_USER = Users()
 
-@APP.route('/api/v1/auth/register', methods=['POST'])
+@app.route('/api/v1/auth/register', methods=['POST'])
 def register():
     '''endpoint to register a user'''
     data = request.get_json()
@@ -105,7 +106,7 @@ def register():
     return response
 
 
-@APP.route('/api/v1/users/books/<int:book_id>', methods=['POST'])
+@app.route('/api/v1/users/books/<int:book_id>', methods=['POST'])
 @jwt_required
 def users_books(book_id):
     '''user can borrow a book if logged in'''
@@ -114,7 +115,7 @@ def users_books(book_id):
     return response
 
 
-@APP.route('/api/v1/auth/login', methods=['POST'])
+@app.route('/api/v1/auth/login', methods=['POST'])
 def login():
     '''login user by verifying password and creating an access token'''
     data = request.get_json()
@@ -131,7 +132,7 @@ def login():
     return response
 
 
-@APP.route('/api/v1/auth/logout', methods=['POST'])
+@app.route('/api/v1/auth/logout', methods=['POST'])
 @jwt_required
 def logout():
     '''logout user by revoking password'''
@@ -140,7 +141,7 @@ def logout():
     return jsonify({"message": "Successfully logged out"})
 
 
-@APP.route('/api/v1/auth/reset-password', methods=['POST'])
+@app.route('/api/v1/auth/reset-password', methods=['POST'])
 def reset_password():
     '''reset user password'''
     data = request.get_json()
@@ -153,4 +154,4 @@ def reset_password():
 
 #method to run app.py
 if __name__ == '__main__':
-    APP.run(debug=True)
+    app.run(debug=True)
