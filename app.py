@@ -1,6 +1,6 @@
 '''app.py'''
 import re
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_jwt_extended import (JWTManager, jwt_required, create_access_token, get_raw_jwt)
 import models
 
@@ -31,7 +31,7 @@ def server_error(error):
 #sent_data = request.get_json(force=True)
 @app.route('/')
 def hello():
-    return jsonify({"msg":"Hello world"})
+    return render_template('documentation.html')
 @app.route('/api/v1/books', methods=['GET', 'POST'])
 def books():
     '''endpoint to add book and get all books'''

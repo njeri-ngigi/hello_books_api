@@ -114,7 +114,3 @@ class Users():
             return {"new_password":new_password}
 
         return {"message":"Incorrect username"}
-
-U = Users()
-U.put("Njeri Ngigi", "njeri-ngigi", "abc@d.com", "1234")
-U.put("Shaggy", "scooby", "scooby@you.com", "1234")
