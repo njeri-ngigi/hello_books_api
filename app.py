@@ -102,8 +102,8 @@ def login():
 @jwt_required
 def logout():
     '''logout user by revoking password'''
-    jti = get_raw_jwt()['jti']
-    BLACKLIST.add(jti)
+    json_token_identifier = get_raw_jwt()['jti']
+    BLACKLIST.add(json_token_identifier)
     return jsonify({"message": "Successfully logged out"}), 200
 
 @app.route('/api/v1/auth/reset-password', methods = ['POST'])
