@@ -2,7 +2,7 @@
 import unittest
 import json
 import ast
-from api import app
+from hello_boos_api import app
 
 class TestApiEndpoints(unittest.TestCase):
     '''class to tests app.py'''
