@@ -1,7 +1,8 @@
 '''test_api.py'''
 import unittest
 import json
-from api import app
+import ast
+from hello_books_api import app
 
 class TestApiEndpoints(unittest.TestCase):
     '''class to tests app.py'''
@@ -13,7 +14,7 @@ class TestApiEndpoints(unittest.TestCase):
         '''test that API can add a book (POST request)'''
         response = self.client().post('/api/v1/books', data=json.dumps(
             {"book_id":16, "title": "Queer cats, An African Tale",
-             "author":"Chimamano Nakote"}),
+             "author":"Chimamano Nakote", "status":"unavailable"}),
                                       content_type='application/json')
         self.assertEqual(response.status_code, 200)
 
@@ -32,7 +33,7 @@ class TestApiEndpoints(unittest.TestCase):
         res = self.client().put('/api/v1/books/2',
                                 data=json.dumps({"title":"The fault in our stars", 
                                                  "author":"John Greene",
-                                                 "edition": "7th"}), 
+                                                 "edition": "7th", "status":"available"}), 
                                 content_type='application/json')
         self.assertEqual(res.status_code, 200)
         results = self.client().get('/api/v1/books/2')
@@ -43,7 +44,7 @@ class TestApiEndpoints(unittest.TestCase):
         res = self.client().post('/api/v1/books', content_type='application/json',
                                  data=json.dumps({"book_id":16,
                                                   "title": "Queer cats, An African Tale",
-                                                  "author": "Chimamano Nakote"}))
+                                                  "author": "Chimamano Nakote", "status":"available"}))
         self.assertEqual(res.status_code, 200)
         res = self.client().delete('/api/v1/books/16')
         self.assertEqual(res.status_code, 200)
@@ -53,29 +54,37 @@ class TestApiEndpoints(unittest.TestCase):
         self.assertIn("Book not found", result.data)
 
     def test_user_actions(self):
-        '''method to test register, login, borrow book, logout and reset_password endpoints'''
+        '''method to test register, login, borrow book and logout endpoints'''
+        #test register
         result = self.client().post('/api/v1/auth/register', content_type='application/json',
                                     data=json.dumps({"username":"hawa", "name":"Hawaii Yusuf",
                                                      "email":"hawa@gma.com", "password":"where",
                                                      "confirm_password":"where"}))
-        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.status_code, 201)
+        self.assertIn("user registered successfully", result.data)
 
+        #test login
         result2 = self.client().post('/api/v1/auth/login', content_type='application/json',
                                      data=json.dumps({"username":"hawa", "password":"where"}))
-        a_token = result2.data
+        
+        my_data = ast.literal_eval(result2.data)
+        a_token = my_data["token"]
+        print(a_token)
+        
         self.assertEqual(result2.status_code, 200)
+        self.assertEqual("Login successful", my_data["message"])
 
+        #test borrow book
         result3 = self.client().post('/api/v1/users/books/2',
                                      headers=dict(Authorization="Bearer "+ a_token))
         self.assertEqual(result3.status_code, 200)
+        self.assertIn("Book successfully checked out", result3.data)
 
+        #test logout 
         result4 = self.client().post('/api/v1/auth/logout',
                                      headers=dict(Authorization="Bearer " + a_token))
+        self.assertEqual(result4.status_code, 200)
         self.assertIn('Successfully logged out', result4.data)
-
-        result5 = self.client().post('/api/v1/auth/reset-password', content_type='application/json',
-                                     data=json.dumps({"username":"hawa"}))
-        self.assertEqual(result5.status_code, 200)
 
 
     def test_reset_password(self):
@@ -84,10 +93,10 @@ class TestApiEndpoints(unittest.TestCase):
                                     data=json.dumps({"username": "lucy", "name": "Morningstar",
                                                      "email": "lucy@hot.com", "password": "1234",
                                                      "confirm_password": "1234"}))
-        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result.status_code, 201)
 
-        result = self.client().post('/api/v1/auth/reset-password', content_type="application/json",
+        result2 = self.client().post('/api/v1/auth/reset-password', content_type="application/json",
                                     data=json.dumps({"username":"lucy"}))
-        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result2.status_code, 200)
 if __name__ == "__main__":
     unittest.main()

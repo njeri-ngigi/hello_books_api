@@ -21,7 +21,7 @@ class Books():
 
         return {"message":"Book not found"}
 
-    def put(self, title, author, edition, book_id):
+    def put(self, title, author, edition, book_id, status):
         '''add a book to ALL_BOOKS'''
         if book_id in ALL_BOOKS:
             return {"message":"Book id entered already exists"}
@@ -29,20 +29,22 @@ class Books():
         self.book["title"] = title
         self.book["author"] = author
         self.book["edition"] = edition
+        self.book["status"] = status
 
         ALL_BOOKS[book_id] = self.book
-        return ALL_BOOKS[book_id]
+        return {"message":"Book added successfully"}
 
     #edit a book
-    def edit_book(self, title, author, edition, book_id):
+    def edit_book(self, title, author, edition, book_id, status):
         '''edit a book by its id'''
         if book_id in ALL_BOOKS:
             self.book["title"] = title
             self.book["author"] = author
             self.book["edition"] = edition
+            self.book["status"] = status
 
             ALL_BOOKS[book_id] = self.book
-            return ALL_BOOKS[book_id]
+            return {"message": "Details edited successfully"}
         return {"message":"Book you are trying to edit doesn't exist"}
 
     def delete(self, book_id):
@@ -57,10 +59,10 @@ B = Books()
 B2 = Books()
 B3 = Books()
 B4 = Books()
-B.put("Tiny Stone", "Martha Mackenzie", "1st", 1)
-B2.put("Fly away birdie", "Marietta Gonzalez", "1st", 2)
-B3.put("Go home, Susan", "Barry White", "1st", 3)
-B4.put("Dunia haina huruma", "Kung'u Kahiga", "1st", 4)
+B.put("Tiny Stone", "Martha Mackenzie", "1st", 1, "available")
+B2.put("Fly away birdie", "Marietta Gonzalez", "1st", 2, "available")
+B3.put("Go home, Susan", "Barry White", "1st", 3, "available")
+B4.put("Dunia haina huruma", "Kung'u Kahiga", "1st", 4, "unavailable")
 
 
 USERS = {}
@@ -81,7 +83,7 @@ class Users():
         self.user["password"] = pw_hash
 
         USERS[username] = self.user
-        return {username : USERS[username]}
+        return {"message":"user registered successfully"}
 
     def verify_password(self, username, password):
         '''verify password'''
@@ -95,7 +97,10 @@ class Users():
     def borrow_book(self, book_id):
         '''borrow a book by book_id'''
         if book_id in ALL_BOOKS:
-            return {"message":"Book successfully checked out"}
+            if ALL_BOOKS[book_id]["status"] == "available":
+                ALL_BOOKS[book_id]["status"]="unavailable"
+                return {"message":"Book successfully checked out"}
+            return {"message":"Book is currently unavailble"}
         return {"message":"Book not found"}
     
     def reset_password(self, username):
@@ -106,7 +111,7 @@ class Users():
             pw_hash = generate_password_hash(new_password)
             USERS[username]["password"] = pw_hash
 
-            return {"new password":new_password}
+            return {"new_password":new_password}
 
         return {"message":"Incorrect username"}
 
