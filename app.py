@@ -45,8 +45,8 @@ def home():
 @jwt.token_in_blacklist_loader
 def check_if_token_blacklist(decrypted_token):
     '''check if jti(unique identifier) is in black list'''
-    jti = decrypted_token['jti']
-    return jti in BLACKLIST
+    json_token_identifier = decrypted_token['jti']
+    return json_token_identifier in BLACKLIST
 
 @app.route('/api/v1/auth/register', methods = ['POST'])
 def register():
