@@ -29,7 +29,7 @@ def page_not_found(error):
 @app.errorhandler(405)
 def unauthorized(error):
     '''error handler for 405'''
-    return jsonify(dict(error = 'Unauthorized method')), 405
+    return jsonify(dict(error = 'Method not allowed')), 405
 
 @app.errorhandler(500)
 def server_error(error):

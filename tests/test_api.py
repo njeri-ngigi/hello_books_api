@@ -14,7 +14,7 @@ class TestApiEndpoints(unittest.TestCase):
         '''test that API can add a book (POST request)'''
         response = self.client().post('/api/v1/books', data=json.dumps(
             {"book_id":16, "title": "Queer cats, An African Tale",
-             "author":"Chimamano Nakote", "status":"unavailable"}),
+             "author":"Chimamano Nakote", "status":"unavailable", "edition":"4th"}),
                                       content_type='application/json')
         self.assertEqual(response.status_code, 200)
 
@@ -25,18 +25,30 @@ class TestApiEndpoints(unittest.TestCase):
 
     def test_api_can_get_book_by_id(self):
         '''test that api can retrieve book by id (GET request)'''
-        response = self.client().get('/api/v1/books/2')
+        self.client().post('/api/v1/books', data=json.dumps({"book_id":23,
+                                                             "title": "Queer cats, An African Tale",
+                                                             "author":"Chimamano Nakote", "status":"available",
+                                                             "edition":"4th"}),
+                                            content_type='application/json')
+        response = self.client().get('/api/v1/books/23')
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Fly away birdie", str(response.data))
+        print(response.data)
+        self.assertIn("Queer cats, An African Tale", str(response.data))
+
     def test_book_can_be_edited(self):
         '''test that api can modify book'''
-        res = self.client().put('/api/v1/books/2',
-                                data=json.dumps({"title":"The fault in our stars", 
+        self.client().post('/api/v1/books', data=json.dumps({"book_id": 21,
+                                                             "title": "Queer cats, An African Tale",
+                                                             "author": "Chimamano Nakote", "status": "available",
+                                                             "edition":"7th"}),
+                                            content_type='application/json')
+        res = self.client().put('/api/v1/books/21',
+                                data=json.dumps({"title": "Queer cats, An African Tale",
                                                  "author":"John Greene",
                                                  "edition": "7th", "status":"available"}), 
                                 content_type='application/json')
         self.assertEqual(res.status_code, 200)
-        results = self.client().get('/api/v1/books/2')
+        results = self.client().get('/api/v1/books/21')
         self.assertIn("John Greene", str(results.data))
 
     def test_delete_book(self):
@@ -66,16 +78,18 @@ class TestApiEndpoints(unittest.TestCase):
         #test login
         result2 = self.client().post('/api/v1/auth/login', content_type='application/json',
                                      data=json.dumps({"username":"hawa", "password":"where"}))
-        
         my_data = ast.literal_eval(result2.data)
         a_token = my_data["token"]
-        print(a_token)
-        
         self.assertEqual(result2.status_code, 200)
         self.assertEqual("Login successful", my_data["message"])
 
         #test borrow book
-        result3 = self.client().post('/api/v1/users/books/2',
+        self.client().post('/api/v1/books',
+                                data=json.dumps({"title": "The fault in our stars",
+                                                 "author": "John Greene",
+                                                 "edition": "7th", "status": "available", "book_id":32}),
+                                content_type='application/json')
+        result3 = self.client().post('/api/v1/users/books/32',
                                      headers=dict(Authorization="Bearer "+ a_token))
         self.assertEqual(result3.status_code, 200)
         self.assertIn("Book successfully checked out", result3.data)

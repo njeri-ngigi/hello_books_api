@@ -52,9 +52,10 @@ class TestModels(unittest.TestCase):
         self.assertEqual(result, "True")
     def test_borrow_book(self):
         '''test borrow a book'''
-        result = self.my_user.borrow_book(1)
+        self.my_book.put("Lady Lord", "Ling liu", "1st", 11, "available")
+        result = self.my_user.borrow_book(11)
         self.assertEqual(result, {"message":"Book successfully checked out"})
-        result2 = self.my_user.borrow_book(1)
+        result2 = self.my_user.borrow_book(11)
         self.assertEqual(result2, {"message":"Book is currently unavailble"})
 
     def test_reset_password(self):
