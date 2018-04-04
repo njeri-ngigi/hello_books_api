@@ -9,37 +9,45 @@ tracking and renting books. Books can be added, deleted, retrieved and
 edited through endpoints. A user can login in, logout, reset password 
 and borrow a book through the endpoints.
 
-##### BOOKS COLLECTION ['/api/v1/books']
-###### Retrieve all books [Method = 'GET']
+#### BOOKS COLLECTION ['/api/v1/books']
+##### Retrieve all books
+```
+[Method = 'GET']
+```
 This method retrieves all books in the system
 ```
     Response 200 (application/json)
     
         {
-        '1' : {'title': 'Go Home, Susan', 'author': 'Jonas Jonas', 'edition': '3rd'},
-        '2' : {'title': 'Tiny Bugs', 'author': 'Mary', 'edition': '1st'}
+        "1" : {"title": "Go Home, Susan", "author": "Jonas Jonas", "edition": "3rd", "status":"available"},
+        "2" : {'title': "Tiny Bugs", "author": "Mary", "edition": "1st", "status":"available"}
         }
 ```
 
-###### Add a book [Method = 'POST']
+##### Add a book 
+```
+[Method = 'POST']
+```
 This method adds a book
 ```
     Request (application/json)
     
         Body
             {"title":"I'm out", "author":"Patrick Swazey",
-             "edition":"4th", "book_id":4}
+             "edition":"4th", "book_id":4, "status':'available"}
 
     Response 200 (application/json)
         
         Body
-            {"author": "Patrick Swazey", "edition": "4th",
-             "title": "I'm out"}
+            {"message":"Book added successfully"}
 
 ```
 
-##### BOOK BY ID ACTIONS ['/api/v1/books/{}']
-###### Retrieve a single book by ID [Method = 'GET']
+#### BOOK BY ID ACTIONS ['/api/v1/books/{}']
+##### Retrieve a single book by ID 
+```
+[Method = 'GET']
+```
 This method gets a single book by ID
 ```
     Request (application/json)
@@ -50,10 +58,13 @@ This method gets a single book by ID
     
         Body 
             {"title":"I'm out", "author":"Patrick Swazey",
-             "edition":"4th", "book_id":4}
+             "edition":"4th", "book_id":4, "status":"available"}
 ```
 
-###### Edit a book by ID [Method = 'PUT']
+##### Edit a book by ID 
+```
+[Method = 'PUT']
+```
 This method edits a book through ID
 ```
     Request (application/json)
@@ -62,17 +73,19 @@ This method edits a book through ID
         
         Body
             {"title":"I'm out", "author":"Patrick Feather Bottom",
-             "edition":"4th"}
+             "edition":"4th", "status":"available"}
              
     Response 200 (application/json)
     
         Body 
-            {"title":"I'm out", "author":"Patrick Swazey",
-             "edition":"4th"}
+            {"message": "Details edited successfully"}
     
 ```
 
-###### Delete a book by ID [Method = 'DELETE']
+##### Delete a book by ID 
+```
+[Method = 'DELETE']
+```
 This method deletes book by ID
 ```
     Request (application/json)
@@ -85,8 +98,8 @@ This method deletes book by ID
     
 ```
 
-##### USER ACTIONS
-###### Register a user ['/api/v1/auth/register']
+#### USER ACTIONS
+#### Register a user ['/api/v1/auth/register']
 This method registers a user
 ```
     Request (application/json)
@@ -96,13 +109,9 @@ This method registers a user
              
     Response 200 (application/json)
         Body
-            {"mikey": {"email": "qw@we.com", "name": "Mulandi Mike",
-                       "password": "pbkdf2:sha256:50000$SBHb0E3v$79b2
-                                    96702deef160c9c08b51dca219cd8e55a
-                                    d9610e57f60ed49d1c6045ad37e"}
-                        }
+            {"message":"user registered successfully"}
 ```
-##### Login a user ['/api/v1/auth/login']
+#### Login a user ['/api/v1/auth/login']
 This method logs in a user by returning a token
 ```
     Request (application/json)
@@ -110,14 +119,14 @@ This method logs in a user by returning a token
             {"username":"mikey", "password":"where"}
         
     Response
-        eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlYTQ0ZjA5YS01M
+        {"token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJlYTQ0ZjA5YS01M
         Tg2LTRjZWMtODdjMi04MjE3MWJkODg1NTciLCJleHAiOjE1MjI2MTQ0MTYsImZ
         yZXNoIjpmYWxzZSwiaWF0IjoxNTIyNjEzNTE2LCJ0eXBlIjoiYWNjZXNzIiwib
         mJmIjoxNTIyNjEzNTE2LCJpZGVudGl0eSI6Im1pa2V5In0.GEiVrXXx9-j6Kcr
-        MBGfDgETZIBtdWGjCyExkKkTgXi4
+        MBGfDgETZIBtdWGjCyExkKkTgXi4"}
 ```
 
-##### Borrow a book ['/api/v1/users/books/{}']
+#### Borrow a book ['/api/v1/users/books/{}']
 This method uses the token obtained during login to checkout a book
 ```
     Request
@@ -137,7 +146,7 @@ This method uses the token obtained during login to checkout a book
         Body 
             {"message":"Book successfully checked out"}
 ```
-##### Logout a user ['/api/v1/auth/logout']
+#### Logout a user ['/api/v1/auth/logout']
 This method logs out a user by blacklisting a token
 ```
     Request
@@ -153,10 +162,10 @@ This method logs out a user by blacklisting a token
                             
     Response 200 (application/json)
         body
-            {"message":"Successfully logged out"}
+            {"message":"Logout Successful"}
 ```
 
-##### Reset user password ['/api/v1/auth/reset-password']
+#### Reset user password ['/api/v1/auth/reset-password']
 This method resets a password to a random string of 7 digits
 ```
     Request (application/json)
@@ -164,6 +173,4 @@ This method resets a password to a random string of 7 digits
         
     Response 200 (application/json)
         Body {"new password": "350JRBI"}
-```     
-
-            
+```         
