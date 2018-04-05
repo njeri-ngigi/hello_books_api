@@ -49,7 +49,7 @@ def check_if_token_blacklist(decrypted_token):
     json_token_identifier = decrypted_token['jti']
     return json_token_identifier in BLACKLIST
 
-@app.route('/api/v1/auth/register', methods=['POST'])
+@app.route('/api/v1/auth/register', methods = ['POST'])
 def register():
     '''endpoint to register a user'''
     data = request.get_json()
@@ -78,7 +78,7 @@ def register():
     response.status_code = 201
     return response
 
-@app.route('/api/v1/users/books/<int:book_id>', methods=['POST'])
+@app.route('/api/v1/users/books/<int:book_id>', methods = ['POST'])
 @jwt_required
 def users_books(book_id):
     '''user can borrow a book if logged in'''
@@ -86,7 +86,7 @@ def users_books(book_id):
     response.status_code = 200
     return response
 
-@app.route('/api/v1/auth/login', methods=['POST'])
+@app.route('/api/v1/auth/login', methods = ['POST'])
 def login():
     '''login user by verifying password and creating an access token'''
     data = request.get_json()
@@ -104,7 +104,7 @@ def login():
     response.status_code = 401
     return response
 
-@app.route('/api/v1/auth/logout', methods=['POST'])
+@app.route('/api/v1/auth/logout', methods = ['POST'])
 @jwt_required
 def logout():
     '''logout user by revoking password'''
