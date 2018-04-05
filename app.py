@@ -6,6 +6,7 @@ import models
 
 app = Flask(__name__)
 app.config["TESTING"] = True
+app.url_map.strict_slashes = False
 
 MY_BOOK = models.Books()
 MY_USER = models.Users()
@@ -60,9 +61,9 @@ def register():
     password = (data.get('password')).strip(' ')
     confirm_password = (data.get('confirm_password')).strip(' ')
 
-    if username is None or not title:
+    if username is None or not username:
         return jsonify({"message": "Enter username"})
-    if name is None or not author:
+    if name is None or not name:
         return jsonify({"message":"Enter name"})
     
     if len(password) < 4:
@@ -111,7 +112,7 @@ def logout():
     BLACKLIST.add(json_token_identifier)
     return jsonify({"message": "Successfully logged out"}), 200
 
-@app.route('/api/v1/auth/reset-password', methods = ['POST'])
+@app.route('/api/v1/auth/reset-password', methods=['POST'])
 def reset_password():
     '''reset user password'''
     data = request.get_json()
@@ -179,28 +180,36 @@ def book_book_id(book_id):
 
     elif request.method == 'PUT':
         #modify or edit a book method
-        edit_book = models.ALL_BOOKS[book_id]
-        data = request.get_json()
-        if not data:
-            return jsonify({"message": "Fields cannot be empty"})
-        title = (data.get('title')).strip(' ')
-        author = (data.get('author')).strip(' ')
-        edition = (data.get('edition')).strip(' ')
-        status = (data.get('status')).strip(' ')
-        if title is None or not title:
-            title = edit_book["title"]
-        if author is None or not author:
-            author = edit_book["author"]
-        if edition is None or not edition:
-            edition = edit_book["edition"]
-        if status is None or not status:
-            status = edit_book["status"]
+        try:
+            edit_book = models.ALL_BOOKS[book_id]
 
-        response = jsonify(MY_BOOK.edit_book(
-            title, author, edition, book_id, status))
-        response.status_code = 200
+            data = request.get_json()
+            if not data:
+                return jsonify({"message": "All fields cannot be empty enter a field to change"})
 
-        return response
+            title = data.get('title')
+            author = data.get('author')
+            edition = data.get('edition')
+            status = data.get('status')
+                
+            if not title:
+                title = edit_book["title"]
+            if not title.strip():
+                    return {"message":"Enter valid data"}
+            if not author:
+                author = edit_book["author"]
+            if not edition:
+                edition = edit_book["edition"]
+            if not status:
+                status = edit_book["status"]
+
+            response = jsonify(MY_BOOK.edit_book(
+                title, author, edition, book_id, status))
+            response.status_code = 200
+
+            return response
+        except KeyError:
+            return jsonify({"message":"Book you are trying to edit doesn't exist"})
 
     #delete a book, method=DELETE
     response = jsonify(MY_BOOK.delete(book_id))

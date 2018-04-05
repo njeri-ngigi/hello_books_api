@@ -56,7 +56,7 @@ class TestApiEndpoints(unittest.TestCase):
         res = self.client().post('/api/v1/books', content_type='application/json',
                                  data=json.dumps({"book_id":16,
                                                   "title": "Queer cats, An African Tale",
-                                                  "author": "Chimamano Nakote", "status":"available"}))
+                                                  "author": "Chimamano Nakote", "status":"available", "edition":"4th"}))
         self.assertEqual(res.status_code, 200)
         res = self.client().delete('/api/v1/books/16')
         self.assertEqual(res.status_code, 200)
