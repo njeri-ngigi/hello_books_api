@@ -45,8 +45,8 @@ def home():
 @jwt.token_in_blacklist_loader
 def check_if_token_blacklist(decrypted_token):
     '''check if jti(unique identifier) is in black list'''
-    jti = decrypted_token['jti']
-    return jti in BLACKLIST
+    json_token_identifier = decrypted_token['jti']
+    return json_token_identifier in BLACKLIST
 
 @app.route('/api/v1/auth/register', methods=['POST'])
 def register():
@@ -54,12 +54,17 @@ def register():
     data = request.get_json()
     if not data:
         return jsonify({"message": "Fields cannot be empty"})
-    username = data.get('username')
-    name = data.get('name')
-    email = data.get('email')
-    password = data.get('password')
-    confirm_password = data.get('confirm_password')
+    username = (data.get('username')).strip(' ')
+    name = (data.get('name')).strip(' ')
+    email = (data.get('email')).strip(' ')
+    password = (data.get('password')).strip(' ')
+    confirm_password = (data.get('confirm_password')).strip(' ')
 
+    if username is None or not title:
+        return jsonify({"message": "Enter username"})
+    if name is None or not author:
+        return jsonify({"message":"Enter name"})
+    
     if len(password) < 4:
         return jsonify({"message": "password is too short"})
     if confirm_password != password:
@@ -102,8 +107,8 @@ def login():
 @jwt_required
 def logout():
     '''logout user by revoking password'''
-    jti = get_raw_jwt()['jti']
-    BLACKLIST.add(jti)
+    json_token_identifier = get_raw_jwt()['jti']
+    BLACKLIST.add(json_token_identifier)
     return jsonify({"message": "Successfully logged out"}), 200
 
 @app.route('/api/v1/auth/reset-password', methods = ['POST'])
@@ -129,11 +134,22 @@ def books():
         if not data:
             return jsonify({"message": "Fields cannot be empty"})
 
-        title = data.get('title')
-        author = data.get('author')
-        edition = data.get('edition')
+        title = (data.get('title')).strip(' ')
+        author = (data.get('author')).strip(' ')
+        edition = (data.get('edition')).strip(' ')
         book_id = data.get('book_id')
-        status = data.get('status')
+        status = (data.get('status')).strip(' ')
+
+        if title is None or not title:
+            return jsonify({"message":"Enter title"})
+        if author is None or not author:
+            return jsonify({"message":"Enter author"})
+        if edition is None or not edition:
+            return jsonify({"message":"Enter edition"})
+        if book_id is None or not book_id or not isinstance(book_id, int):
+            return jsonify({"message":"Enter valid book_id"})
+        if status is None or not status:
+            return jsonify({"message":"Enter status"})
 
         if status == "available" or status == "unavailable":
             response = jsonify(MY_BOOK.put(
@@ -167,17 +183,17 @@ def book_book_id(book_id):
         data = request.get_json()
         if not data:
             return jsonify({"message": "Fields cannot be empty"})
-        title = data.get('title')
-        author = data.get('author')
-        edition = data.get('edition')
-        status = data.get('status')
-        if title is None:
+        title = (data.get('title')).strip(' ')
+        author = (data.get('author')).strip(' ')
+        edition = (data.get('edition')).strip(' ')
+        status = (data.get('status')).strip(' ')
+        if title is None or not title:
             title = edit_book["title"]
-        if author is None:
+        if author is None or not author:
             author = edit_book["author"]
-        if edition is None:
+        if edition is None or not edition:
             edition = edit_book["edition"]
-        if status is None:
+        if status is None or not status:
             status = edit_book["status"]
 
         response = jsonify(MY_BOOK.edit_book(
