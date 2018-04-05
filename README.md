@@ -1,6 +1,6 @@
 # Hello Books API
 Hello books API is a RESTful Flask application for a simple application that helps manage a library and its processes like stocking, tracking and renting books. Books can be added, deleted, retrieved and edited through endpoints. A user can login in, logout, reset password and borrow a book through the endpoints too. 
-###### Travis CI [![Build Status](https://travis-ci.org/njeri-ngigi/hello-books-api.svg?branch=master)](https://travis-ci.org/njeri-ngigi/hello-books-api)  Coveralls [![Coverage Status](https://coveralls.io/repos/github/njeri-ngigi/hello-books-api/badge.svg?branch=master)](https://coveralls.io/github/njeri-ngigi/hello-books-api?branch=master)  Code Climate [![Maintainability](https://api.codeclimate.com/v1/badges/7c9b7ea6c931b923ab83/maintainability)](https://codeclimate.com/github/njeri-ngigi/hello-books-api/maintainability)
+###### Travis CI [![Build Status](https://travis-ci.org/njeri-ngigi/hello_books_api.svg?branch=master)](https://travis-ci.org/njeri-ngigi/hello_books_api)  Coveralls [![Coverage Status](https://coveralls.io/repos/github/njeri-ngigi/hello_books_api/badge.svg?branch=master)](https://coveralls.io/github/njeri-ngigi/hello_books_api?branch=master)  Code Climate [![Maintainability](https://api.codeclimate.com/v1/badges/7c9b7ea6c931b923ab83/maintainability)](https://codeclimate.com/github/njeri-ngigi/hello-books-api/maintainability)
 
 ## Prerequisites
       pip
