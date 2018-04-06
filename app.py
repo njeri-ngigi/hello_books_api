@@ -33,14 +33,14 @@ def unauthorized(error):
     return jsonify(dict(error = 'Method not allowed')), 405
 
 @app.errorhandler(500)
-def server_error(error):
-    '''error handler for 404'''
+def internal_server_error(error):
+    '''error handler for 500'''
     return jsonify(dict(error = 'Internal server error')), 500
 
 @app.route('/')
 def home():
     '''method to render documentation'''
-    return render_template('documentation.html')
+    return render_template('documentation.html'), 200
 
 '''user actions'''
 @jwt.token_in_blacklist_loader
@@ -54,22 +54,22 @@ def register():
     '''endpoint to register a user'''
     data = request.get_json()
     if not data:
-        return jsonify({"message": "Fields cannot be empty"})
-    username = (data.get('username')).strip(' ')
-    name = (data.get('name')).strip(' ')
-    email = (data.get('email')).strip(' ')
-    password = (data.get('password')).strip(' ')
-    confirm_password = (data.get('confirm_password')).strip(' ')
+        return jsonify({"message": "Fields cannot be empty"}), 216
+    username = (data.get('username')).strip()
+    name = (data.get('name')).strip()
+    email = (data.get('email')).strip()
+    password = (data.get('password')).strip()
+    confirm_password = (data.get('confirm_password')).strip()
 
     if username is None or not username:
-        return jsonify({"message": "Enter username"})
+        return jsonify({"message": "Enter username"}), 216
     if name is None or not name:
-        return jsonify({"message":"Enter name"})
+        return jsonify({"message":"Enter name"}),216
     
     if len(password) < 4:
-        return jsonify({"message": "password is too short"})
+        return jsonify({"message": "password is too short"}), 216
     if confirm_password != password:
-        return jsonify({"message": "Passwords don't match"})
+        return jsonify({"message": "Passwords don't match"}), 216
     match = re.match(
         '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email)
     if match is None:
@@ -91,14 +91,14 @@ def login():
     '''login user by verifying password and creating an access token'''
     data = request.get_json()
     if not data:
-        return jsonify({"message": "Fields cannot be empty"})
+        return jsonify({"message": "Fields cannot be empty"}), 216
     username = data.get('username')
     password = data.get('password')
     auth = MY_USER.verify_password(username, password)
 
     if auth == "True":
         access_token = create_access_token(identity=username)
-        return jsonify(dict(token = access_token, message = "Login successful"))
+        return jsonify(dict(token = access_token, message = "Login successful")), 200
 
     response = jsonify(auth)
     response.status_code = 401
@@ -117,7 +117,7 @@ def reset_password():
     '''reset user password'''
     data = request.get_json()
     if not data:
-        return jsonify({"message": "Fields cannot be empty"})
+        return jsonify({"message": "Fields cannot be empty"}), 216
     username = data.get("username")
 
     response = jsonify(MY_USER.reset_password(username))
@@ -133,24 +133,24 @@ def books():
         #add a book method="POST"
         data = request.get_json()
         if not data:
-            return jsonify({"message": "Fields cannot be empty"})
+            return jsonify({"message": "Fields cannot be empty"}), 216
 
-        title = (data.get('title')).strip(' ')
-        author = (data.get('author')).strip(' ')
-        edition = (data.get('edition')).strip(' ')
+        title = (data.get('title')).strip()
+        author = (data.get('author')).strip()
+        edition = (data.get('edition')).strip()
         book_id = data.get('book_id')
-        status = (data.get('status')).strip(' ')
+        status = (data.get('status')).strip()
 
         if title is None or not title:
-            return jsonify({"message":"Enter title"})
+            return jsonify({"message":"Enter title"}), 216
         if author is None or not author:
-            return jsonify({"message":"Enter author"})
+            return jsonify({"message":"Enter author"}), 216
         if edition is None or not edition:
-            return jsonify({"message":"Enter edition"})
+            return jsonify({"message":"Enter edition"}), 216
         if book_id is None or not book_id or not isinstance(book_id, int):
-            return jsonify({"message":"Enter valid book_id"})
+            return jsonify({"message":"Enter valid book_id"}), 216
         if status is None or not status:
-            return jsonify({"message":"Enter status"})
+            return jsonify({"message":"Enter status"}), 216
 
         if status == "available" or status == "unavailable":
             response = jsonify(MY_BOOK.put(
@@ -159,7 +159,7 @@ def books():
 
             return response
 
-        return jsonify({"message": "Status has to be either available or unavailable"})
+        return jsonify({"message": "Status has to be either available or unavailable"}), 216
     #get a book method="GET"
     get_books = MY_BOOK.get_all()
     response = jsonify(get_books)
@@ -185,7 +185,7 @@ def book_book_id(book_id):
 
             data = request.get_json()
             if not data:
-                return jsonify({"message": "All fields cannot be empty enter a field to change"})
+                return jsonify({"message": "All fields cannot be empty enter a field to change"}), 216
 
             title = data.get('title')
             author = data.get('author')
@@ -194,8 +194,6 @@ def book_book_id(book_id):
                 
             if not title:
                 title = edit_book["title"]
-            if not title.strip():
-                    return {"message":"Enter valid data"}
             if not author:
                 author = edit_book["author"]
             if not edition:
@@ -209,7 +207,7 @@ def book_book_id(book_id):
 
             return response
         except KeyError:
-            return jsonify({"message":"Book you are trying to edit doesn't exist"})
+            return jsonify({"message":"Book you are trying to edit doesn't exist"}), 204
 
     #delete a book, method=DELETE
     response = jsonify(MY_BOOK.delete(book_id))
