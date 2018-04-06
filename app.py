@@ -54,7 +54,7 @@ def register():
     '''endpoint to register a user'''
     data = request.get_json()
     if not data:
-        return jsonify({"message": "Fields cannot be empty"}), 216
+        return jsonify({"message": "Fields cannot be empty"}) 
     username = (data.get('username')).strip()
     name = (data.get('name')).strip()
     email = (data.get('email')).strip()
@@ -62,14 +62,14 @@ def register():
     confirm_password = (data.get('confirm_password')).strip()
 
     if username is None or not username:
-        return jsonify({"message": "Enter username"}), 216
+        return jsonify({"message": "Enter username"}) 
     if name is None or not name:
-        return jsonify({"message":"Enter name"}),216
+        return jsonify({"message":"Enter name"}),206
     
     if len(password) < 4:
-        return jsonify({"message": "password is too short"}), 216
+        return jsonify({"message": "password is too short"}) 
     if confirm_password != password:
-        return jsonify({"message": "Passwords don't match"}), 216
+        return jsonify({"message": "Passwords don't match"}) 
     match = re.match(
         '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email)
     if match is None:
@@ -91,7 +91,7 @@ def login():
     '''login user by verifying password and creating an access token'''
     data = request.get_json()
     if not data:
-        return jsonify({"message": "Fields cannot be empty"}), 216
+        return jsonify({"message": "Fields cannot be empty"}) 
     username = data.get('username')
     password = data.get('password')
     auth = MY_USER.verify_password(username, password)
@@ -117,7 +117,7 @@ def reset_password():
     '''reset user password'''
     data = request.get_json()
     if not data:
-        return jsonify({"message": "Fields cannot be empty"}), 216
+        return jsonify({"message": "Fields cannot be empty"}) 
     username = data.get("username")
 
     response = jsonify(MY_USER.reset_password(username))
@@ -133,7 +133,7 @@ def books():
         #add a book method="POST"
         data = request.get_json()
         if not data:
-            return jsonify({"message": "Fields cannot be empty"}), 216
+            return jsonify({"message": "Fields cannot be empty"}) 
 
         title = (data.get('title')).strip()
         author = (data.get('author')).strip()
@@ -142,15 +142,15 @@ def books():
         status = (data.get('status')).strip()
 
         if title is None or not title:
-            return jsonify({"message":"Enter title"}), 216
+            return jsonify({"message":"Enter title"}) 
         if author is None or not author:
-            return jsonify({"message":"Enter author"}), 216
+            return jsonify({"message":"Enter author"}) 
         if edition is None or not edition:
-            return jsonify({"message":"Enter edition"}), 216
+            return jsonify({"message":"Enter edition"}) 
         if book_id is None or not book_id or not isinstance(book_id, int):
-            return jsonify({"message":"Enter valid book_id"}), 216
+            return jsonify({"message":"Enter valid book_id"}) 
         if status is None or not status:
-            return jsonify({"message":"Enter status"}), 216
+            return jsonify({"message":"Enter status"}) 
 
         if status == "available" or status == "unavailable":
             response = jsonify(MY_BOOK.put(
@@ -159,7 +159,7 @@ def books():
 
             return response
 
-        return jsonify({"message": "Status has to be either available or unavailable"}), 216
+        return jsonify({"message": "Status has to be either available or unavailable"}) 
     #get a book method="GET"
     get_books = MY_BOOK.get_all()
     response = jsonify(get_books)
@@ -185,7 +185,7 @@ def book_book_id(book_id):
 
             data = request.get_json()
             if not data:
-                return jsonify({"message": "All fields cannot be empty enter a field to change"}), 216
+                return jsonify({"message": "All fields cannot be empty enter a field to change"}) 
 
             title = data.get('title')
             author = data.get('author')
